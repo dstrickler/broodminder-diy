@@ -1,12 +1,16 @@
-
+#!/usr/bin/python2.7
 __author__ = "Jesse Ross-Jones"
 __license__ = "Public Domain"
 __version__ = "1.0"
 
-##Tested with Python 2.7
-##Using bluepy, scan for bluetooth devices for 15 seconds.
-##Search list of found devices and for devices matching broodminder manufacture data
-##Decode and print the advertising data
+## Tested with Python 2.7
+## Using bluepy, scan for bluetooth devices for 15 seconds.
+## Search list of found devices and for devices matching broodminder manufacture data
+## Decode and print the advertising data
+## 
+## DStrickler Sat, Apr 14, 2018
+## Use bluepy module from https://github.com/IanHarvey/bluepy (has install instructions)
+##
 
 from bluepy.btle import Scanner, DefaultDelegate
 
