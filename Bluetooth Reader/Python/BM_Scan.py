@@ -19,9 +19,7 @@ __version__ = "1.0"
 from bluepy.btle import Scanner, DefaultDelegate
 
 def byte(str, byteNum):
-    #https://stackoverflow.com/questions/5649407/hexadecimal-string-to-byte-array-in-python
-	#print str
-	#print byteNum 
+    # https://stackoverflow.com/questions/5649407/hexadecimal-string-to-byte-array-in-python
 	
 	# Trapping for 'str' passed as 'None'
 	if (str == None):
