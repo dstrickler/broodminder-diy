@@ -10,13 +10,24 @@ __version__ = "1.0"
 ## 
 ## DStrickler Sat, Apr 14, 2018
 ## Use bluepy module from https://github.com/IanHarvey/bluepy (has install instructions)
+## Needs to be run with "sudo" so that the BLE library can sniff out devices.
+##
+## DStrickler Mon, Apr 16, 2018
+## Sniffs out all devices, but doesn't exclude weight when not a 43 device.
 ##
 
 from bluepy.btle import Scanner, DefaultDelegate
 
 def byte(str, byteNum):
-    return str[byteNum*2]+str[byteNum*2+1]
     #https://stackoverflow.com/questions/5649407/hexadecimal-string-to-byte-array-in-python
+	#print str
+	#print byteNum 
+	
+	# Trapping for 'str' passed as 'None'
+	if (str == None):
+		return ''
+		
+	return str[byteNum*2]+str[byteNum*2+1]
 
 def checkBM(data):
     check = False
@@ -52,10 +63,15 @@ def extractData(data):
     #batteryPercent = e.data[byteNumAdvBattery_1V2]
     batteryPercent = int(byte(data , byteNumAdvBattery_1V2) , 16)
     #Elapsed = e.data[byteNumAdvElapsed_2V2] + (e.data[byteNumAdvElapsed_2V2 + 1] << 8)
+    
     #temperatureDegreesC = e.data[byteNumAdvTemperature_2V2] + (e.data[byteNumAdvTemperature_2V2 + 1] << 8)
     temperatureDegreesC = int(byte(data,byteNumAdvTemperature_2V2+1) + byte(data,byteNumAdvTemperature_2V2),16)
     temperatureDegreesC = (float(temperatureDegreesC) / pow(2, 16) * 165 - 40) #* 9 / 5 + 32
-    #humidityPercent = e.data[byteNumAdvHumidity_1V2]
+    temperatureDegreesF = (temperatureDegreesC * 9/5) + 32
+    
+    # humidityPercent = e.data[byteNumAdvHumidity_1V2]
+    humidityPercent = int(byte(data , byteNumAdvHumidity_1V2) , 16)
+    
     #weightL = e.data[byteNumAdvWeightL_2V2+1] * 256 + e.data[byteNumAdvWeightL_2V2 + 0] - 32767
     weightL = int(byte(data,byteNumAdvWeightL_2V2+1) + byte(data,byteNumAdvWeightL_2V2 + 0),16) - 32767
     weightScaledL = float(weightL) / 100
@@ -65,8 +81,8 @@ def extractData(data):
     weightScaledTotal = weightScaledL + weightScaledR
 
     #print "weight = %s , temp = %s, bat = %s" % (weightScaledTotal, temperatureDegreesC, batteryPercent)
-    print("Weight = {}, Temperature = {}, Battery = {}".format(weightScaledTotal, temperatureDegreesC, batteryPercent))
-    
+    print("Weight = {}, TemperatureF = {}, Humidity = {}, Battery = {}".format(weightScaledTotal, temperatureDegreesF, humidityPercent, batteryPercent))
+    print("-----------------------------------------------------------------------------")
     
 class ScanDelegate(DefaultDelegate):
     def __init__(self):
