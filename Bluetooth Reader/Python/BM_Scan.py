@@ -62,7 +62,7 @@ def extractData(data):
     # Version 2 advertising
 
     # Device UUID
-    deviceUuid = byte(data , byteNumAdvUUID_3V2)
+    deviceUuid = byte(data , byteNumAdvdeviceModelIFllc_1)
     print("Device UUID: " + deviceUuid)
 
     #batteryPercent = e.data[byteNumAdvBattery_1V2]
