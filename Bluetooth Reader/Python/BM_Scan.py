@@ -20,30 +20,30 @@ __version__ = "1.0"
 from bluepy.btle import Scanner, DefaultDelegate
 import urllib2
 
+
 def byte(str, byteNum):
     # https://stackoverflow.com/questions/5649407/hexadecimal-string-to-byte-array-in-python
-	
-	# Trapping for 'str' passed as 'None'
-	if (str == None):
-		return ''
-		
-	return str[byteNum*2]+str[byteNum*2+1]
+
+    # Trapping for 'str' passed as 'None'
+    if (str == None):
+        return ''
+
+    return str[byteNum * 2] + str[byteNum * 2 + 1]
+
 
 def checkBM(data):
     check = False
     byteCheck = 0
     BMIFLLC = str("8d02")
-    #print(byte(data,byteCheck))
-    if (BMIFLLC == byte(data,byteCheck) + byte(data,byteCheck+1)):
-        #print "confirmed BroodMinder"
+    # print(byte(data,byteCheck))
+    if (BMIFLLC == byte(data, byteCheck) + byte(data, byteCheck + 1)):
+        # print "confirmed BroodMinder"
         check = True
     return check
 
 
-
 def extractData(deviceId, data):
-
-    offset = 8 #There are 8 bits less than described in BroodMinder documentation
+    offset = 8  # There are 8 bits less than described in BroodMinder documentation
 
     byteNumAdvdeviceModelIFllc_1 = 10 - offset
     byteNumAdvDeviceVersionMinor_1 = 11 - offset
@@ -61,63 +61,82 @@ def extractData(deviceId, data):
 
     # Version 2 advertising
 
-    #batteryPercent = e.data[byteNumAdvBattery_1V2]
-    batteryPercent = int(byte(data , byteNumAdvBattery_1V2) , 16)
-    #Elapsed = e.data[byteNumAdvElapsed_2V2] + (e.data[byteNumAdvElapsed_2V2 + 1] << 8)
-    
-    #temperatureDegreesC = e.data[byteNumAdvTemperature_2V2] + (e.data[byteNumAdvTemperature_2V2 + 1] << 8)
-    temperatureDegreesC = int(byte(data,byteNumAdvTemperature_2V2+1) + byte(data,byteNumAdvTemperature_2V2),16)
-    temperatureDegreesC = (float(temperatureDegreesC) / pow(2, 16) * 165 - 40) #* 9 / 5 + 32
-    temperatureDegreesF = round((temperatureDegreesC * 9/5) + 32,1)
-    
+    # batteryPercent = e.data[byteNumAdvBattery_1V2]
+    batteryPercent = int(byte(data, byteNumAdvBattery_1V2), 16)
+    # Elapsed = e.data[byteNumAdvElapsed_2V2] + (e.data[byteNumAdvElapsed_2V2 + 1] << 8)
+
+    # temperatureDegreesC = e.data[byteNumAdvTemperature_2V2] + (e.data[byteNumAdvTemperature_2V2 + 1] << 8)
+    temperatureDegreesC = int(byte(data, byteNumAdvTemperature_2V2 + 1) + byte(data, byteNumAdvTemperature_2V2), 16)
+    temperatureDegreesC = (float(temperatureDegreesC) / pow(2, 16) * 165 - 40)  # * 9 / 5 + 32
+    temperatureDegreesF = round((temperatureDegreesC * 9 / 5) + 32, 1)
+
     # humidityPercent = e.data[byteNumAdvHumidity_1V2]
-    humidityPercent = int(byte(data , byteNumAdvHumidity_1V2) , 16)
-    
-    #weightL = e.data[byteNumAdvWeightL_2V2+1] * 256 + e.data[byteNumAdvWeightL_2V2 + 0] - 32767
-    weightL = int(byte(data,byteNumAdvWeightL_2V2+1) + byte(data,byteNumAdvWeightL_2V2 + 0),16) - 32767
+    humidityPercent = int(byte(data, byteNumAdvHumidity_1V2), 16)
+
+    # weightL = e.data[byteNumAdvWeightL_2V2+1] * 256 + e.data[byteNumAdvWeightL_2V2 + 0] - 32767
+    weightL = int(byte(data, byteNumAdvWeightL_2V2 + 1) + byte(data, byteNumAdvWeightL_2V2 + 0), 16) - 32767
     weightScaledL = float(weightL) / 100
-    #weightR = e.data[byteNumAdvWeightR_2V2 + 1] * 256 + e.data[byteNumAdvWeightR_2V2 + 0] - 32767
-    weightR = int(byte(data,byteNumAdvWeightR_2V2+1) + byte(data,byteNumAdvWeightR_2V2 + 0),16) - 32767
+    # weightR = e.data[byteNumAdvWeightR_2V2 + 1] * 256 + e.data[byteNumAdvWeightR_2V2 + 0] - 32767
+    weightR = int(byte(data, byteNumAdvWeightR_2V2 + 1) + byte(data, byteNumAdvWeightR_2V2 + 0), 16) - 32767
     weightScaledR = float(weightR) / 100
     weightScaledTotal = weightScaledL + weightScaledR
 
     # If the weight is a positive number, it's good. If it's negative, we know it's a false reading.
     # Note wildly negative readings happen from T&H devices, so we always need to trap for this.
     if (weightScaledTotal > -1):
-        print("Weight = {}, TemperatureF = {}, Humidity = {}, Battery = {}".format(weightScaledTotal, temperatureDegreesF, humidityPercent, batteryPercent))
+        # We have a valid weight.
+        print(
+            "Weight = {}, TemperatureF = {}, Humidity = {}, Battery = {}".format(weightScaledTotal, temperatureDegreesF,
+                                                                                 humidityPercent, batteryPercent))
+        # Send the info to MyBroodMinder.com
+        print "Sending device '" + deviceId + "' data to the MyBroodMinder Cloud ..."
+        contents = urllib2.urlopen(
+            "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&temperature=" + str(
+                temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&battery=" + str(
+                batteryPercent + "&weight=" + str(weightScaledTotal))).read()
     else:
-        print("TemperatureF = {}, Humidity = {}, Battery = {}".format(temperatureDegreesF, humidityPercent, batteryPercent))
+        # We do not have a valid weight.
+        print("TemperatureF = {}, Humidity = {}, Battery = {}".format(temperatureDegreesF, humidityPercent,
+                                                                      batteryPercent))
+        # Send the info to MyBroodMinder.com
+        print "Sending device '" + deviceId + "' data to the MyBroodMinder Cloud ..."
+        contents = urllib2.urlopen(
+            "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&temperature=" + str(
+                temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&battery=" + str(batteryPercent)).read()
 
     # Send the info to MyBroodMinder.com
-    print "Sending device '" + deviceId + "' data to the Cloud ..."
-    contents = urllib2.urlopen("https://dev.beekeeping.io/api_public/devices/upload?device_id=" + deviceId + "&temperature=" + str(temperatureDegreesF) + "&humidity=" +  str(humidityPercent) + "&battery=" + str(batteryPercent)).read()
+    print "Sending device '" + deviceId + "' data to the MyBroodMinder Cloud ..."
+    contents = urllib2.urlopen(
+        "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&temperature=" + str(
+            temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&battery=" + str(batteryPercent)).read()
 
     print("-----------------------------------------------------------------------------")
-    
+
+
 class ScanDelegate(DefaultDelegate):
     def __init__(self):
         DefaultDelegate.__init__(self)
 
     def handleDiscovery(self, dev, isNewDev, isNewData):
         if isNewDev:
-            #print "Discovered device", dev.addr
+            # print "Discovered device", dev.addr
             print("Discovered device {}".format(dev.addr))
         elif isNewData:
-            #print "Received new data from", dev.addr
+            # print "Received new data from", dev.addr
             print("Received new data from {}".format(dev.addr))
+
 
 scanner = Scanner().withDelegate(ScanDelegate())
 devices = scanner.scan(15.0)
 
-
 for dev in devices:
-    if(checkBM(dev.getValueText(255))):
-        #print "BroodMinder Found!"
-        #print "Device %s (%s), RSSI=%d dB" % (dev.addr, dev.addrType, dev.rssi)
-        print("Device {} ({}), RSSI={} dB".format(dev.addr,dev.addrType,dev.rssi))
+    if (checkBM(dev.getValueText(255))):
+        # print "BroodMinder Found!"
+        # print "Device %s (%s), RSSI=%d dB" % (dev.addr, dev.addrType, dev.rssi)
+        print("Device {} ({}), RSSI={} dB".format(dev.addr, dev.addrType, dev.rssi))
         for (adtype, desc, value) in dev.getScanData():
-            #print "  %s = %s" % (desc, value)
-            print ("{} = {}".format(desc,value))
+            # print "  %s = %s" % (desc, value)
+            print ("{} = {}".format(desc, value))
 
             # Trap for the BroodMinder ID
             if (desc == "Complete Local Name"):
