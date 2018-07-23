@@ -62,7 +62,6 @@ def extractData(deviceId, data):
     # Version 2 advertising
 
     # batteryPercent = e.data[byteNumAdvBattery_1V2]
-    batteryPercent = NULL
     batteryPercent = int(byte(data, byteNumAdvBattery_1V2), 16)
     # Elapsed = e.data[byteNumAdvElapsed_2V2] + (e.data[byteNumAdvElapsed_2V2 + 1] << 8)
 
@@ -104,12 +103,6 @@ def extractData(deviceId, data):
         contents = urllib2.urlopen(
             "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&temperature=" + str(
                 temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&battery=" + str(batteryPercent) ).read()
-
-    # Send the info to MyBroodMinder.com
-    print "Sending device '" + deviceId + "' data to the MyBroodMinder Cloud ..."
-    contents = urllib2.urlopen(
-        "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&temperature=" + str(
-            temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&battery=" + str(batteryPercent)).read()
 
     print("-----------------------------------------------------------------------------")
 
