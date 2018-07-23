@@ -15,8 +15,10 @@ __version__ = "1.0"
 ## DStrickler Mon, Apr 16, 2018
 ## Sniffs out all devices, but doesn't exclude weight when not a 43 device.
 ##
+## DStrickler ddate
 
 from bluepy.btle import Scanner, DefaultDelegate
+import requests
 
 def byte(str, byteNum):
     # https://stackoverflow.com/questions/5649407/hexadecimal-string-to-byte-array-in-python
@@ -83,6 +85,8 @@ def extractData(data):
         print("Weight = {}, TemperatureF = {}, Humidity = {}, Battery = {}".format(weightScaledTotal, temperatureDegreesF, humidityPercent, batteryPercent))
     else:
         print("TemperatureF = {}, Humidity = {}, Battery = {}".format(temperatureDegreesF, humidityPercent, batteryPercent))
+
+    r = requests.get("http://example.com/foo/bar")
 
     print("-----------------------------------------------------------------------------")
     
