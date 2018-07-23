@@ -81,9 +81,10 @@ def extractData(data):
     #print "weight = %s , temp = %s, bat = %s" % (weightScaledTotal, temperatureDegreesC, batteryPercent)
     if (weightScaledTotal > -1):
         print("Weight = {}, TemperatureF = {}, Humidity = {}, Battery = {}".format(weightScaledTotal, temperatureDegreesF, humidityPercent, batteryPercent))
-    else
+    else:
         print("TemperatureF = {}, Humidity = {}, Battery = {}".format(weightScaledTotal, temperatureDegreesF, humidityPercent, batteryPercent))
-        print("-----------------------------------------------------------------------------")
+
+    print("-----------------------------------------------------------------------------")
     
 class ScanDelegate(DefaultDelegate):
     def __init__(self):
