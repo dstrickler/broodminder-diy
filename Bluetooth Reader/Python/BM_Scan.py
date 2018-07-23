@@ -65,7 +65,7 @@ def extractData(data):
     #temperatureDegreesC = e.data[byteNumAdvTemperature_2V2] + (e.data[byteNumAdvTemperature_2V2 + 1] << 8)
     temperatureDegreesC = int(byte(data,byteNumAdvTemperature_2V2+1) + byte(data,byteNumAdvTemperature_2V2),16)
     temperatureDegreesC = (float(temperatureDegreesC) / pow(2, 16) * 165 - 40) #* 9 / 5 + 32
-    temperatureDegreesF = (temperatureDegreesC * 9/5) + 32
+    temperatureDegreesF = round((temperatureDegreesC * 9/5) + 32,1)
     
     # humidityPercent = e.data[byteNumAdvHumidity_1V2]
     humidityPercent = int(byte(data , byteNumAdvHumidity_1V2) , 16)
