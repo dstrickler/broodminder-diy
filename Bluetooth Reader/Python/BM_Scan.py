@@ -93,7 +93,7 @@ def extractData(deviceId, data):
         contents = urllib2.urlopen(
             "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&temperature=" + str(
                 temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&battery=" + str(
-                batteryPercent + "&weight=" + str(weightScaledTotal))).read()
+                batteryPercent) + "&weight=" + str(weightScaledTotal)).read()
     else:
         # We do not have a valid weight.
         print("TemperatureF = {}, Humidity = {}, Battery = {}".format(temperatureDegreesF, humidityPercent,
