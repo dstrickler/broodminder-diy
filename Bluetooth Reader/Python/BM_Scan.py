@@ -10,12 +10,16 @@ __version__ = "1.0"
 ## 
 ## DStrickler Sat, Apr 14, 2018
 ## Use bluepy module from https://github.com/IanHarvey/bluepy (has install instructions)
-## Needs to be run with "sudo" so that the BLE library can sniff out devices.
+## Needs to be run with "sudo" so that the BLE library can sniff out devices. Otherwise will error out.
 ##
 ## DStrickler Mon, Apr 16, 2018
 ## Sniffs out all devices, but doesn't exclude weight when not a 43 device.
 ##
-## DStrickler ddate
+## DStrickler Mon, Jul 23, 2018
+## Added preliminary upload test with Alpha API call (/api_public).
+## Uploads temperature, humidity, weight and battery from all the BroodMinder
+## devices that show up in a BLE scan.
+##
 
 from bluepy.btle import Scanner, DefaultDelegate
 import urllib2
@@ -23,7 +27,6 @@ import urllib2
 
 def byte(str, byteNum):
     # https://stackoverflow.com/questions/5649407/hexadecimal-string-to-byte-array-in-python
-
     # Trapping for 'str' passed as 'None'
     if (str == None):
         return ''
@@ -82,7 +85,7 @@ def extractData(deviceId, data):
     weightScaledTotal = weightScaledL + weightScaledR
 
     # If the weight is a positive number, it's good. If it's negative, we know it's a false reading.
-    # Note wildly negative readings happen from T&H devices, so we always need to trap for this.
+    # Note wildly negative readings happen on T&H devices, so we always need to trap for this.
     if (weightScaledTotal > -1):
         # We have a valid weight.
         print(
@@ -95,6 +98,7 @@ def extractData(deviceId, data):
             weightScaledTotal) + "&battery_charge=" + str(
             batteryPercent)
         print url_string
+
         contents = urllib2.urlopen(url_string).read()
     else:
         # We do not have a valid weight.
@@ -106,6 +110,7 @@ def extractData(deviceId, data):
             temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&battery_charge=" + str(
             batteryPercent)
         print url_string
+
         contents = urllib2.urlopen(url_string).read()
 
     print("-----------------------------------------------------------------------------")
