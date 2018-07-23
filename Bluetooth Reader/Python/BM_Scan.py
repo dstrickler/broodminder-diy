@@ -19,6 +19,7 @@ __version__ = "1.0"
 ## Added preliminary upload test with Alpha API call (/api_public).
 ## Uploads temperature, humidity, weight and battery from all the BroodMinder
 ## devices that show up in a BLE scan.
+## Note I am using an unpublished API call to upload data with this code.
 ##
 
 from bluepy.btle import Scanner, DefaultDelegate
