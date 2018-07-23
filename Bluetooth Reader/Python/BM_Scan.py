@@ -79,7 +79,7 @@ def extractData(data):
     weightScaledTotal = weightScaledL + weightScaledR
 
     #print "weight = %s , temp = %s, bat = %s" % (weightScaledTotal, temperatureDegreesC, batteryPercent)
-    if (weightScaledTotal > -1)
+    if (weightScaledTotal > -1):
         print("Weight = {}, TemperatureF = {}, Humidity = {}, Battery = {}".format(weightScaledTotal, temperatureDegreesF, humidityPercent, batteryPercent))
     else
         print("TemperatureF = {}, Humidity = {}, Battery = {}".format(weightScaledTotal, temperatureDegreesF, humidityPercent, batteryPercent))
