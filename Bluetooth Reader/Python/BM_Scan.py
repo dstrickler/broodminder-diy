@@ -90,7 +90,7 @@ def extractData(deviceId, data):
 
     # Send the info to MyBroodMinder.com
     print "Sending device data to the Cloud ..."
-    contents = urllib2.urlopen("https://dev.beekeeping.io/api_public/devices/upload?device_id=" + deviceId + "&temperature=" . str(temperatureDegreesF) ).read()
+    contents = urllib2.urlopen("https://dev.beekeeping.io/api_public/devices/upload?device_id=" + deviceId + "&temperature=" + str(temperatureDegreesF) ).read()
 
     print("-----------------------------------------------------------------------------")
     
