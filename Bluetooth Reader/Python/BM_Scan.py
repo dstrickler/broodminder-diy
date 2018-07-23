@@ -35,7 +35,7 @@ def checkBM(data):
     BMIFLLC = str("8d02")
     #print(byte(data,byteCheck))
     if (BMIFLLC == byte(data,byteCheck) + byte(data,byteCheck+1)):
-        #print "confirmed Broodminder"
+        #print "confirmed BroodMinder"
         check = True
     return check
 
@@ -43,7 +43,7 @@ def checkBM(data):
 
 def extractData(data):
 
-    offset = 8 #There are 8 bits less than described in Broodminder documentation
+    offset = 8 #There are 8 bits less than described in BroodMinder documentation
 
     byteNumAdvdeviceModelIFllc_1 = 10 - offset
     byteNumAdvDeviceVersionMinor_1 = 11 - offset
@@ -64,6 +64,7 @@ def extractData(data):
     # Device UUID
     deviceUuid = byte(data , byteNumAdvdeviceModelIFllc_1)
     print("Device UUID: " + deviceUuid)
+    print("Data: " + data)
 
     #batteryPercent = e.data[byteNumAdvBattery_1V2]
     batteryPercent = int(byte(data , byteNumAdvBattery_1V2) , 16)
@@ -85,14 +86,15 @@ def extractData(data):
     weightScaledR = float(weightR) / 100
     weightScaledTotal = weightScaledL + weightScaledR
 
-    #print "weight = %s , temp = %s, bat = %s" % (weightScaledTotal, temperatureDegreesC, batteryPercent)
+    # If the weight is a positive number, it's good. If it's negative, we know it's a false reading.
+    # Note wildly negative readings happen from T&H devices, so we always need to trap for this.
     if (weightScaledTotal > -1):
         print("Weight = {}, TemperatureF = {}, Humidity = {}, Battery = {}".format(weightScaledTotal, temperatureDegreesF, humidityPercent, batteryPercent))
     else:
         print("TemperatureF = {}, Humidity = {}, Battery = {}".format(temperatureDegreesF, humidityPercent, batteryPercent))
 
     # Send the info to MyBroodMinder.com
-    contents = urllib2.urlopen("https://dev.beekeeping.io/api_public/devices/upload??device_id='" + deviceUuid + "'").read()
+    # contents = urllib2.urlopen("https://dev.beekeeping.io/api_public/devices/upload??device_id='" + deviceUuid + "'").read()
 
     print("-----------------------------------------------------------------------------")
     
@@ -120,4 +122,6 @@ for dev in devices:
         for (adtype, desc, value) in dev.getScanData():
             #print "  %s = %s" % (desc, value)
             print ("{} = {}".format(desc,value))
+            if (desc == "Complete Local Name"):
+                print "Found: " + value
         extractData(dev.getValueText(255))
