@@ -90,10 +90,12 @@ def extractData(deviceId, data):
                                                                                  humidityPercent, batteryPercent))
         # Send the info to MyBroodMinder.com
         print "Sending device '" + deviceId + "' data to the MyBroodMinder Cloud ..."
-        contents = urllib2.urlopen(
-            "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&temperature=" + str(
-                temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&battery=" + str(
-                batteryPercent) + "&weight=" + str(weightScaledTotal)).read()
+        url_string = "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&temperature=" + str(
+            temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&weight=" + str(
+            weightScaledTotal) + "&battery_charge=" + str(
+            batteryPercent)
+        print url_string
+        contents = urllib2.urlopen(url_string).read()
     else:
         # We do not have a valid weight.
         print("TemperatureF = {}, Humidity = {}, Battery = {}".format(temperatureDegreesF, humidityPercent,
