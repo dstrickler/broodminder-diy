@@ -62,6 +62,7 @@ def extractData(deviceId, data):
     # Version 2 advertising
 
     # batteryPercent = e.data[byteNumAdvBattery_1V2]
+    batteryPercent = NULL
     batteryPercent = int(byte(data, byteNumAdvBattery_1V2), 16)
     # Elapsed = e.data[byteNumAdvElapsed_2V2] + (e.data[byteNumAdvElapsed_2V2 + 1] << 8)
 
