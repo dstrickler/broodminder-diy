@@ -100,10 +100,11 @@ def extractData(deviceId, data):
                                                                       batteryPercent))
         # Send the info to MyBroodMinder.com
         print "Sending device '" + deviceId + "' data to the MyBroodMinder Cloud ..."
-        contents = urllib2.urlopen(
-            "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&temperature=" + str(
-                temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&battery_charge=" + str(
-                batteryPercent)).read()
+        url_string = "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&temperature=" + str(
+            temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&battery_charge=" + str(
+            batteryPercent)
+        print url_string
+        contents = urllib2.urlopen(url_string).read()
 
     print("-----------------------------------------------------------------------------")
 
