@@ -18,7 +18,9 @@ __version__ = "1.0"
 ## DStrickler ddate
 
 from bluepy.btle import Scanner, DefaultDelegate
-import requests
+
+import urllib2
+contents = urllib2.urlopen("https://app.beekeeping.io/login").read()
 
 def byte(str, byteNum):
     # https://stackoverflow.com/questions/5649407/hexadecimal-string-to-byte-array-in-python
@@ -86,7 +88,6 @@ def extractData(data):
     else:
         print("TemperatureF = {}, Humidity = {}, Battery = {}".format(temperatureDegreesF, humidityPercent, batteryPercent))
 
-    r = requests.get("https://app.beekeeping.io/login")
 
     print("-----------------------------------------------------------------------------")
     
