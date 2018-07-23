@@ -86,7 +86,7 @@ def extractData(data):
     else:
         print("TemperatureF = {}, Humidity = {}, Battery = {}".format(temperatureDegreesF, humidityPercent, batteryPercent))
 
-    r = requests.get("http://example.com/foo/bar")
+    r = requests.get("https://app.beekeeping.io/login")
 
     print("-----------------------------------------------------------------------------")
     
