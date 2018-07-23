@@ -18,9 +18,7 @@ __version__ = "1.0"
 ## DStrickler ddate
 
 from bluepy.btle import Scanner, DefaultDelegate
-
 import urllib2
-contents = urllib2.urlopen("https://app.beekeeping.io/login").read()
 
 def byte(str, byteNum):
     # https://stackoverflow.com/questions/5649407/hexadecimal-string-to-byte-array-in-python
@@ -62,6 +60,11 @@ def extractData(data):
     byteNumAdvUUID_3V2 = 25 - offset
 
     # Version 2 advertising
+
+    # Device UUID
+    deviceUuid = byte(data , byteNumAdvUUID_3V2)
+
+
     #batteryPercent = e.data[byteNumAdvBattery_1V2]
     batteryPercent = int(byte(data , byteNumAdvBattery_1V2) , 16)
     #Elapsed = e.data[byteNumAdvElapsed_2V2] + (e.data[byteNumAdvElapsed_2V2 + 1] << 8)
@@ -88,6 +91,8 @@ def extractData(data):
     else:
         print("TemperatureF = {}, Humidity = {}, Battery = {}".format(temperatureDegreesF, humidityPercent, batteryPercent))
 
+    # Send the info to MyBroodMinder.com
+    contents = urllib2.urlopen("https://app.beekeeping.io/public_api/devices/upload?device_id=" + deviceUuid).read()
 
     print("-----------------------------------------------------------------------------")
     
