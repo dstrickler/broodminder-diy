@@ -11,6 +11,7 @@ __version__ = "1.0"
 ## DStrickler Sat, Apr 14, 2018
 ## Use bluepy module from https://github.com/IanHarvey/bluepy (has install instructions)
 ## Needs to be run with "sudo" so that the BLE library can sniff out devices. Otherwise will error out.
+## On Ubuntu, I've found that I need to install the bluepy source from scratch to get it to work.
 ##
 ## DStrickler Mon, Apr 16, 2018
 ## Sniffs out all devices, but doesn't exclude weight when not a 43 device.
