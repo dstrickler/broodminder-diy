@@ -70,7 +70,7 @@ def extractData(deviceId, data):
     # Version 2 advertising
 
     # Current sample number from the device.
-    sample = int(byte(data, byteNumAdvElapsed_2), 16)
+    sampleNumber = int(byte(data, byteNumAdvElapsed_2), 16)
 
     # batteryPercent = e.data[byteNumAdvBattery_1V2]
     batteryPercent = int(byte(data, byteNumAdvBattery_1V2), 16)
@@ -97,11 +97,11 @@ def extractData(deviceId, data):
     if (weightScaledTotal > -1):
         # We have a valid weight.
         print(
-            "Weight = {}, TemperatureF = {}, Humidity = {}, Battery = {}".format(weightScaledTotal, temperatureDegreesF,
+            "Sample = {}, Weight = {}, TemperatureF = {}, Humidity = {}, Battery = {}".format(sampleNumber, weightScaledTotal, temperatureDegreesF,
                                                                                  humidityPercent, batteryPercent))
         # Send the info to MyBroodMinder.com
         print "Sending device '" + deviceId + "' data to the MyBroodMinder Cloud ..."
-        url_string = "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&sample=" + sample + "&temperature=" + str(
+        url_string = "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&sample=" + str(sampleNumber) + "&temperature=" + str(
             temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&weight=" + str(
             weightScaledTotal) + "&battery_charge=" + str(
             batteryPercent)
@@ -110,11 +110,11 @@ def extractData(deviceId, data):
         contents = urllib2.urlopen(url_string).read()
     else:
         # We do not have a valid weight.
-        print("TemperatureF = {}, Humidity = {}, Battery = {}".format(temperatureDegreesF, humidityPercent,
+        print("Sample = {}, TemperatureF = {}, Humidity = {}, Battery = {}".format(sampleNumber, temperatureDegreesF, humidityPercent,
                                                                       batteryPercent))
         # Send the info to MyBroodMinder.com
         print "Sending device '" + deviceId + "' data to the MyBroodMinder Cloud ..."
-        url_string = "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&sample=" + sample + &temperature=" + str(
+        url_string = "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&sample=" + str(sampleNumber) + "&temperature=" + str(
             temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&battery_charge=" + str(
             batteryPercent)
         print url_string
