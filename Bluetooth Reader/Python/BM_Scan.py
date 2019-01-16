@@ -22,6 +22,9 @@ __version__ = "1.0"
 ## devices that show up in a BLE scan.
 ## Note I am using an unpublished API call to upload data with this code.
 ##
+## DStrickler Wed, Jan 16, 2019
+## Added support for uploading the sample info as well.
+##
 
 from bluepy.btle import Scanner, DefaultDelegate
 import urllib2
@@ -54,7 +57,7 @@ def extractData(deviceId, data):
     byteNumAdvDeviceVersionMinor_1 = 11 - offset
     byteNumAdvDeviceVersionMajor_1 = 12 - offset
     byteNumAdvBattery_1V2 = 14 - offset
-    byteNumAdvElapsed_2 = 15 - offset
+    byteNumAdvElapsed_2 = 15 - offset   # This is the sample number from the device.
     byteNumAdvTemperature_2 = 17 - offset
     byteNumAdvHumidity_1 = 24 - offset
     byteNumAdvElapsed_2V2 = 15 - offset
@@ -65,6 +68,9 @@ def extractData(deviceId, data):
     byteNumAdvUUID_3V2 = 25 - offset
 
     # Version 2 advertising
+
+    # Current sample number from the device.
+    sample = int(byte(data, byteNumAdvElapsed_2), 16)
 
     # batteryPercent = e.data[byteNumAdvBattery_1V2]
     batteryPercent = int(byte(data, byteNumAdvBattery_1V2), 16)
@@ -95,7 +101,7 @@ def extractData(deviceId, data):
                                                                                  humidityPercent, batteryPercent))
         # Send the info to MyBroodMinder.com
         print "Sending device '" + deviceId + "' data to the MyBroodMinder Cloud ..."
-        url_string = "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&temperature=" + str(
+        url_string = "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&sample=" + sample + "&temperature=" + str(
             temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&weight=" + str(
             weightScaledTotal) + "&battery_charge=" + str(
             batteryPercent)
@@ -108,7 +114,7 @@ def extractData(deviceId, data):
                                                                       batteryPercent))
         # Send the info to MyBroodMinder.com
         print "Sending device '" + deviceId + "' data to the MyBroodMinder Cloud ..."
-        url_string = "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&temperature=" + str(
+        url_string = "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&sample=" + sample + &temperature=" + str(
             temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&battery_charge=" + str(
             batteryPercent)
         print url_string
