@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/env python3
 __author__ = "Jesse Ross-Jones"
 __license__ = "Public Domain"
 __version__ = "1.0"
