@@ -27,7 +27,7 @@ __version__ = "1.0"
 ##
 
 from bluepy.btle import Scanner, DefaultDelegate
-import urllib2
+import urllib3
 
 
 def byte(str, byteNum):
@@ -100,26 +100,26 @@ def extractData(deviceId, data):
             "Sample = {}, Weight = {}, TemperatureF = {}, Humidity = {}, Battery = {}".format(sampleNumber, weightScaledTotal, temperatureDegreesF,
                                                                                  humidityPercent, batteryPercent))
         # Send the info to MyBroodMinder.com
-        print "Sending device '" + deviceId + "' data to the MyBroodMinder Cloud ..."
+        print("Sending device '" + deviceId + "' data to the MyBroodMinder Cloud ...")
         url_string = "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&sample=" + str(sampleNumber) + "&temperature=" + str(
             temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&weight=" + str(
             weightScaledTotal) + "&battery_charge=" + str(
             batteryPercent)
-        print url_string
+        print(url_string)
 
-        contents = urllib2.urlopen(url_string).read()
+        contents = urllib3.urlopen(url_string).read()
     else:
         # We do not have a valid weight.
         print("Sample = {}, TemperatureF = {}, Humidity = {}, Battery = {}".format(sampleNumber, temperatureDegreesF, humidityPercent,
                                                                       batteryPercent))
         # Send the info to MyBroodMinder.com
-        print "Sending device '" + deviceId + "' data to the MyBroodMinder Cloud ..."
+        print("Sending device '" + deviceId + "' data to the MyBroodMinder Cloud ...")
         url_string = "https://mybroodminder.com/api_public/devices/upload?device_id=" + deviceId + "&sample=" + str(sampleNumber) + "&temperature=" + str(
             temperatureDegreesF) + "&humidity=" + str(humidityPercent) + "&battery_charge=" + str(
             batteryPercent)
-        print url_string
+        print(url_string)
 
-        contents = urllib2.urlopen(url_string).read()
+        contents = urllib3.urlopen(url_string).read()
 
     print("-----------------------------------------------------------------------------")
 
