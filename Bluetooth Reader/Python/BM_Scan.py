@@ -154,3 +154,5 @@ for dev in devices:
                 deviceId = value
 
         extractData(deviceId, dev.getValueText(255))
+    else:
+        print("Device {} is not a broodminder - ignoring".format(dev.addr))
