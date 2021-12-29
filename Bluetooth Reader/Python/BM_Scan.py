@@ -45,7 +45,7 @@ def checkBM(data):
     BMIFLLC = str("8d02")
     # print(byte(data,byteCheck))
     if (BMIFLLC == byte(data, byteCheck) + byte(data, byteCheck + 1)):
-        # print "confirmed BroodMinder"
+        print("confirmed BroodMinder")
         check = True
     return check
 
