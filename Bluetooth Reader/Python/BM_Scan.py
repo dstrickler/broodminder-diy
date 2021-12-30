@@ -107,7 +107,7 @@ def extractData(deviceId, data):
             batteryPercent)
         print(url_string)
 
-        contents = urllib3.urlopen(url_string).read()
+        urllib3.PoolManager().request("GET", url_string)
     else:
         # We do not have a valid weight.
         print("Sample = {}, TemperatureF = {}, Humidity = {}, Battery = {}".format(sampleNumber, temperatureDegreesF, humidityPercent,
@@ -119,7 +119,7 @@ def extractData(deviceId, data):
             batteryPercent)
         print(url_string)
 
-        contents = urllib3.urlopen(url_string).read()
+        urllib3.PoolManager().request("GET", url_string)
 
     print("-----------------------------------------------------------------------------")
 
